@@ -34,7 +34,7 @@ io.on("connection", socket => {
 	});
 	socket.on("khessPing", message => {
 		var playerList=io.sockets.adapter.rooms.get(room);
-		io.to(room).emit("khessPing",'{"version":"'+socketServerVersion+'","room":'+JSON.stringify(playerList)+'}');
+		io.to(room).emit("khessPing",'{"version":"'+socketServerVersion+'","room":{"name":"'+room+'","size":'+playerList.size+',"list":'+JSON.stringify(Array.from(playerList))+'}}');
 	});
 /* //NOT USED IN KHESS
     socket.on("adduser", username => {
@@ -69,10 +69,16 @@ io.on("connection", socket => {
   });
 */
 
-  socket.on("disconnect", () => {
-	  socket.leave(room);
-	  var playerList=io.sockets.adapter.rooms.get(room);
-	  io.to(room).emit("PlayerDisconnected",JSON.stringify(playerList));
+  socket.on("disconnect", (reason) => {
+	//console.log("USER disconnected");
+	//console.log(reason);
+	socket.leave(room);
+	var playerList=io.sockets.adapter.rooms.get(room);
+	if(playerList){
+		io.to(room).emit("PlayerDisconnected",'{"version":"'+socketServerVersion+'","room":{"name":"'+room+'","size":'+playerList.size+',"list":'+JSON.stringify(Array.from(playerList))+'}}');
+	}else{
+		io.to(room).emit("PlayerDisconnected",'{"version":"'+socketServerVersion+'","room":{"name":"'+room+'","size":0,"list":[]}}');
+	}
 /* //NOT USED IN KHESS
     console.log(`user ${socket.user} is disconnected`);
     if (socket.user) { 
