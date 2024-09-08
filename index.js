@@ -32,6 +32,10 @@ io.on("connection", socket => {
 	socket.on("khessSurrend", message => {
 		io.to(room).emit("khessSurrend",message);
 	});
+	socket.on("khessPing", message => {
+		var playerList=io.sockets.adapter.rooms.get(room);
+		io.to(room).emit("khessPing",JSON.stringify(playerList));
+	});
 /* //NOT USED IN KHESS
     socket.on("adduser", username => {
     socket.user = username;
@@ -66,6 +70,8 @@ io.on("connection", socket => {
 */
 
   socket.on("disconnect", () => {
+	  var playerList=io.sockets.adapter.rooms.get(room);
+	  io.to(room).emit("PlayerDisconnected",JSON.stringify(playerList));
 /* //NOT USED IN KHESS
     console.log(`user ${socket.user} is disconnected`);
     if (socket.user) { 
