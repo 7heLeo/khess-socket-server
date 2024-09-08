@@ -15,7 +15,7 @@ const io = Socket(server, {
 
 //const users = []; //NOT USED IN KHESS
 
-const socketServerVersion = 1.0.1;
+const socketServerVersion = "1.0.1";
 
 io.on("connection", socket => {
 	const room = socket.handshake.headers["room"];
@@ -34,7 +34,7 @@ io.on("connection", socket => {
 	});
 	socket.on("khessPing", message => {
 		var playerList=io.sockets.adapter.rooms.get(room);
-		io.to(room).emit("khessPing",'{"version":'+socketServerVersion+',"room":'+JSON.stringify(playerList)+'}');
+		io.to(room).emit("khessPing",'{"version":"'+socketServerVersion+'","room":'+JSON.stringify(playerList)+'}');
 	});
 /* //NOT USED IN KHESS
     socket.on("adduser", username => {
