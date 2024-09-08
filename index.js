@@ -15,7 +15,7 @@ const io = Socket(server, {
 
 //const users = []; //NOT USED IN KHESS
 
-
+const socketServerVersion = 1.0.1;
 
 io.on("connection", socket => {
 	const room = socket.handshake.headers["room"];
@@ -34,7 +34,7 @@ io.on("connection", socket => {
 	});
 	socket.on("khessPing", message => {
 		var playerList=io.sockets.adapter.rooms.get(room);
-		io.to(room).emit("khessPing",JSON.stringify(playerList));
+		io.to(room).emit("khessPing",'{"version":'+socketServerVersion+',"room":'+JSON.stringify(playerList)+'}');
 	});
 /* //NOT USED IN KHESS
     socket.on("adduser", username => {
@@ -70,6 +70,7 @@ io.on("connection", socket => {
 */
 
   socket.on("disconnect", () => {
+	  socket.leave(room);
 	  var playerList=io.sockets.adapter.rooms.get(room);
 	  io.to(room).emit("PlayerDisconnected",JSON.stringify(playerList));
 /* //NOT USED IN KHESS
@@ -86,6 +87,6 @@ app.get('/', (req, res) => {
     res.send("Server is up and running")
 })
 server.listen(PORT, () => {
-  console.log("Server version: 1.0.1");
+  console.log("Server version: "+socketServerVersion);
   console.log("listening on PORT: ", PORT);
 });
