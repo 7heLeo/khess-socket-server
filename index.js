@@ -86,5 +86,6 @@ app.get('/', (req, res) => {
     res.send("Server is up and running")
 })
 server.listen(PORT, () => {
+  console.log("Server version: 1.0.1");
   console.log("listening on PORT: ", PORT);
 });
