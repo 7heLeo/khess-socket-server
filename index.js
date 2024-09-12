@@ -36,6 +36,9 @@ io.on("connection", socket => {
 		var playerList=io.sockets.adapter.rooms.get(room);
 		io.to(room).emit("khessPing",'{"version":"'+socketServerVersion+'","room":{"name":"'+room+'","size":'+playerList.size+',"list":'+JSON.stringify(Array.from(playerList))+'}}');
 	});
+	socket.on("khessPoke", message => {
+		io.to(room).emit("khessPoke",message);
+	});
 /* //NOT USED IN KHESS
     socket.on("adduser", username => {
     socket.user = username;
